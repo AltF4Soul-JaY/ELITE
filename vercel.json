@@ -1,9 +1,10 @@
 {
   "rewrites": [
-    
     { "source": "/", "destination": "/pages/home.html" },
-    { "source": "/home.html", "destination": "/home.html" },
-    { "source": "/about.html", "destination": "/pages/about.html" }
-    
+    { "source": "/home.html", "destination": "/pages/home.html" },
+    { "source": "/about.html", "destination": "/pages/about.html" },
+    { "source": "/teams.html", "destination": "/pages/teams.html" },
+    { "source": "/news.html", "destination": "/pages/news.html" },
+    { "source": "**", "destination": "/pages/404.html" }
   ]
 }
