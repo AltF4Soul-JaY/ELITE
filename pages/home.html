@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ELITE Esports - BGMI Esports Organisation</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+</head>
+<body>
+
+  <!-- Background Trailer -->
+  <div class="video-bg-container">
+    <iframe
+      src="https://www.youtube.com/embed/w91k6FFy6fc?autoplay=1&mute=1&loop=1&playlist=w91k6FFy6fc&controls=0&modestbranding=1&showinfo=0&rel=0"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen
+    ></iframe>
+    <div class="dark-overlay"></div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="header">
+    <div class="logo-container">
+      <img src="../assets/server/elitelogo.png" alt="ELITE Esports Logo" class="logo" />
+      <h1 class="brand-name">ELITE<span class="glow">Esports</span></h1>
+    </div>
+    
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="home.html" class="active">Home</a></li>
+        <li><a href="#" id="aboutTrigger">About Us</a></li>
+        <li><a href="#" id="teamsTrigger">Teams</a></li>
+        <li><a href="#" id="newsTrigger">News</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="main-content">
+    <section class="hero">
+      <h2 class="hero-title">Welcome to <span class="glow">ELITE Esports</span></h2>
+      <p class="hero-desc">
+        We are a professional esports organisation competing in BGMI tournaments.
+      </p>
+      <a href="" target="_blank" class="join-btn">
+        Join Our WhatsApp Group
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 <span class="glow">ELITE Esports</span>. All rights reserved.</p>
+  </footer>
+
+  <!-- Modals -->
+  <div id="aboutModal" class="dropdown-panel-modal hidden">
+    <div class="dropdown-panel-modal-content" id="aboutModalContent"><p>Loading...</p></div>
+  </div>
+
+  <div id="teamsModal" class="dropdown-panel-modal hidden">
+    <div class="dropdown-panel-modal-content" id="teamsModalContent"><p>Loading...</p></div>
+  </div>
+
+  <div id="newsModal" class="dropdown-panel-modal hidden">
+    <div class="dropdown-panel-modal-content" id="newsModalContent"><p>Loading...</p></div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const modals = {
+      about: {
+        btn: document.getElementById("aboutTrigger"),
+        modal: document.getElementById("aboutModal"),
+        content: document.getElementById("aboutModalContent"),
+        url: "about.html",
+        loaded: false
+      },
+      teams: {
+        btn: document.getElementById("teamsTrigger"),
+        modal: document.getElementById("teamsModal"),
+        content: document.getElementById("teamsModalContent"),
+        url: "teams.html",
+        loaded: false
+      },
+      news: {
+        btn: document.getElementById("newsTrigger"),
+        modal: document.getElementById("newsModal"),
+        content: document.getElementById("newsModalContent"),
+        url: "news.html",
+        loaded: false
+      }
+    };
+
+    Object.values(modals).forEach(({ btn, modal, content, url }, index, all) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        // Close all modals first
+        all.forEach(({ modal }) => modal.classList.add("hidden"));
+
+        modal.classList.remove("hidden");
+
+        if (!modals[btn.id.replace("Trigger", "")].loaded) {
+          fetch(url)
+            .then(res => res.text())
+            .then(html => {
+              const doc = new DOMParser().parseFromString(html, "text/html");
+              content.innerHTML = doc.body.innerHTML;
+              modals[btn.id.replace("Trigger", "")].loaded = true;
+            })
+            .catch(() => {
+              content.innerHTML = "<p>Failed to load content.</p>";
+            });
+        }
+      });
+    });
+
+    // Close modal when clicking outside any modal content
+    document.addEventListener("click", (event) => {
+      Object.values(modals).forEach(({ modal, content, btn }) => {
+        const isOpen = !modal.classList.contains("hidden");
+        const clickedInside = content.contains(event.target);
+        const clickedBtn = btn.contains(event.target);
+        if (isOpen && !clickedInside && !clickedBtn) {
+          modal.classList.add("hidden");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

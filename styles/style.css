@@ -26,10 +26,45 @@ a:hover {
   color: #ff0055;
 }
 
+/* ---------------------------------------- */
+/* Video Background */
+.video-bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-bg-container iframe {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120vw;
+  height: 120vh;
+  pointer-events: none;
+  filter: brightness(0.3) blur(2px);
+}
+
+.dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+/* ---------------------------------------- */
 /* Header */
 .header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   padding: 25px 50px;
   background: rgba(0, 0, 0, 0.85);
@@ -43,11 +78,11 @@ a:hover {
 .logo-container {
   display: flex;
   align-items: center;
+  gap: 14px;
 }
 
 .logo {
   height: 55px;
-  margin-right: 12px;
   filter: drop-shadow(0 0 6px #00fff7);
 }
 
@@ -64,14 +99,24 @@ a:hover {
   text-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7, 0 0 30px #00fff7;
 }
 
-/* Navigation */
-.navbar .nav-links {
+/* ---------------------------------------- */
+/* Navbar */
+.navbar {
+  margin-top: 20px;
+}
+
+.nav-links {
   list-style: none;
   display: flex;
   gap: 30px;
+  justify-content: center;
 }
 
-.navbar .nav-links li a {
+.nav-links li {
+  position: relative;
+}
+
+.nav-links li a {
   font-size: 17px;
   font-weight: 600;
   padding: 8px 14px;
@@ -80,12 +125,112 @@ a:hover {
   transition: background 0.3s;
 }
 
-.navbar .nav-links li a:hover {
+.nav-links li a:hover {
   background: rgba(0, 255, 247, 0.1);
   border: 1px solid #00fff7;
 }
 
-/* Main Section */
+/* ---------------------------------------- */
+/* Hover Dropdown Panel (For minor items only) */
+.has-hover {
+  position: relative;
+}
+
+.has-hover .dropdown-panel {
+  display: none;
+  position: absolute;
+  top: 2.8rem;
+  left: 0;
+  min-width: 320px;
+  max-width: 420px;
+  max-height: 500px;
+  overflow-y: auto;
+
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid #00fff7;
+  border-radius: 10px;
+  padding: 1.25rem;
+  color: #e0e0e0;
+
+  font-size: 0.96rem;
+  line-height: 1.6;
+  z-index: 999;
+
+  box-shadow: 0 0 12px rgba(0, 255, 230, 0.4), 0 0 20px rgba(0, 255, 230, 0.15);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.has-hover:hover .dropdown-panel {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Scrollbar Styling */
+.dropdown-panel::-webkit-scrollbar {
+  width: 8px;
+}
+.dropdown-panel::-webkit-scrollbar-thumb {
+  background-color: #00fff7;
+  border-radius: 10px;
+}
+.dropdown-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------------------------------- */
+/* Click-based Full Modal Panel */
+.dropdown-panel-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  transition: opacity 0.3s ease;
+}
+
+.dropdown-panel-modal.hidden {
+  display: none;
+}
+
+.dropdown-panel-modal-content {
+  background: #111;
+  border: 2px solid #00fff7;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 900px;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: #e0e0e0;
+  box-shadow: 0 0 30px rgba(0, 255, 247, 0.3);
+}
+
+/* Modal Scrollbar */
+.dropdown-panel-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.dropdown-panel-modal-content::-webkit-scrollbar-thumb {
+  background-color: #00fff7;
+  border-radius: 10px;
+}
+.dropdown-panel-modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------------------------------- */
+/* Main Content */
 .main-content {
   padding: 100px 30px 60px;
   text-align: center;
@@ -129,6 +274,7 @@ a:hover {
   box-shadow: 0 0 20px #ff0055;
 }
 
+/* ---------------------------------------- */
 /* Footer */
 .footer {
   background: rgba(0, 0, 0, 0.9);
