@@ -1,0 +1,205 @@
+<!-- TestMatch1Registration.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Match 1 Registration | ELITE Esports</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+    body {
+      background: radial-gradient(ellipse at top, #0a0a0a 0%, #000 100%);
+      color: #00fff7;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header, footer {
+      text-align: center;
+      padding: 16px 0;
+      width: 100%;
+      background: linear-gradient(90deg, #0f0f0f, #1a1a1a);
+      box-shadow: 0 0 15px rgba(0, 255, 247, 0.3);
+    }
+    .title {
+      font-size: 2rem;
+      text-shadow: 0 0 10px #00fff7;
+    }
+    .card {
+      background: rgba(10, 10, 10, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 247, 0.3);
+      max-width: 700px;
+      width: 100%;
+      margin: 20px auto;
+      border: 1px solid #00fff7;
+    }
+    label {
+      display: block;
+      margin: 14px 0 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      background: #000;
+      color: #00fff7;
+      border: 1px solid #00fff7;
+      outline: none;
+    }
+    button {
+      background: #00fff7;
+      color: #000;
+      font-weight: bold;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      margin-top: 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00fff7;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff0055;
+      color: #fff;
+      box-shadow: 0 0 15px #ff0055;
+    }
+    .status, #redirectBox {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="title">ELITE ESPORTS - Test Match 1</h1>
+    <p>Team Registration Portal</p>
+  </header>
+
+  <form id="registrationForm" class="card">
+    <label>Team Name</label>
+    <input type="text" id="teamName" required>
+
+    <label>WhatsApp Contact</label>
+    <input type="tel" id="contact" required>
+
+    <hr style="margin: 30px 0; border-color: #00fff7;" />
+    <h3>Players (Min 3, Max 6)</h3>
+
+    <label>Player 1 Name</label><input id="p1" required>
+    <label>Player 1 UID</label><input id="uid1" required>
+
+    <label>Player 2 Name</label><input id="p2" required>
+    <label>Player 2 UID</label><input id="uid2" required>
+
+    <label>Player 3 Name</label><input id="p3" required>
+    <label>Player 3 UID</label><input id="uid3" required>
+
+    <label>Player 4 Name</label><input id="p4">
+    <label>Player 4 UID</label><input id="uid4">
+
+    <label>Player 5 Name</label><input id="p5">
+    <label>Player 5 UID</label><input id="uid5">
+
+    <label>Player 6 Name</label><input id="p6">
+    <label>Player 6 UID</label><input id="uid6">
+
+    <button type="submit">Submit Registration</button>
+    <div class="status" id="status"></div>
+    <div id="redirectBox" style="display: none;">
+      <p>✅ Registered! Redirecting...</p>
+      <button onclick="location.href='TestMatch1.html'">Click if not redirected</button>
+    </div>
+  </form>
+
+  <footer>
+    <p>&copy; 2025 ELITE Esports | All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-LkMwxEsKcz30XFiZNNp52kfOb8rJtkY",
+      authDomain: "idea-hatch-f30a2.firebaseapp.com",
+      databaseURL: "https://idea-hatch-f30a2-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "idea-hatch-f30a2",
+      storageBucket: "idea-hatch-f30a2.appspot.com",
+      messagingSenderId: "772329230400",
+      appId: "1:772329230400:web:1e633f72154d0c318b0fa5",
+      measurementId: "G-8BEDPTPJ76"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const form = document.getElementById("registrationForm");
+    const status = document.getElementById("status");
+    const redirectBox = document.getElementById("redirectBox");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "Checking slots...";
+
+      const teamName = document.getElementById("teamName").value.trim();
+      const contact = document.getElementById("contact").value.trim();
+      const players = [];
+
+      for (let i = 1; i <= 6; i++) {
+        const name = document.getElementById(`p${i}`).value.trim();
+        const uid = document.getElementById(`uid${i}`).value.trim();
+        if (name && uid) players.push({ name, uid });
+      }
+
+      if (players.length < 3) {
+        status.textContent = "❌ Minimum 3 players required.";
+        return;
+      }
+
+      const basePath = "ELITE ESPORTS/Matches/TestMatch1/Teams";
+      const snapshot = await get(ref(db, basePath));
+      let assignedSlot = null;
+
+      for (let i = 1; i <= 24; i++) {
+        const slot = i.toString().padStart(2, "0");
+        if (!snapshot.hasChild(slot)) {
+          assignedSlot = slot;
+          break;
+        }
+      }
+
+      if (!assignedSlot) {
+        status.textContent = "❌ All 24 slots are filled. Registration closed.";
+        return;
+      }
+
+      const teamPath = `${basePath}/${assignedSlot}/${teamName}`;
+      const data = { Contact: contact };
+      players.forEach((p, i) => {
+        data[`Player ${i + 1}`] = p.name;
+        data[`Player ${i + 1} UID`] = p.uid;
+      });
+
+      try {
+        await Promise.all(Object.entries(data).map(([k, v]) => set(ref(db, `${teamPath}/${k}`), v)));
+        status.textContent = "✅ Registration successful!";
+        form.reset();
+        redirectBox.style.display = "block";
+        setTimeout(() => location.href = "TestMatch1.html", 4000);
+      } catch (err) {
+        console.error(err);
+        status.textContent = "❌ Registration failed. Try again later.";
+      }
+    });
+  </script>
+</body>
+</html>

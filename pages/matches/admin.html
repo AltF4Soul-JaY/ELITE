@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel | ELITE ESPORTS</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #f0f0f0;
+      font-family: 'Rajdhani', sans-serif;
+      padding: 2rem;
+    }
+    h1, h2 {
+      color: #00fff7;
+      text-align: center;
+    }
+    .input-box {
+      max-width: 400px;
+      margin: 1rem auto;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      background: #111;
+      color: #00fff7;
+      border: 1px solid #00fff7;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #00fff7;
+      color: #000;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #ff0055;
+      color: white;
+    }
+    .section {
+      background: #1a1a1a;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-left: 4px solid #00fff7;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      background: #111;
+      color: #00fff7;
+      padding: 1rem;
+      border-radius: 5px;
+      border: 1px solid #00fff7;
+    }
+  </style>
+</head>
+<body>
+
+<h1>ELITE Admin Panel</h1>
+
+<div id="loginBox" class="input-box">
+  <input type="text" id="adminId" placeholder="Admin ID">
+  <input type="password" id="adminPass" placeholder="Admin Password">
+  <button onclick="checkLogin()">Login</button>
+  <p id="loginStatus" style="color: red; text-align:center;"></p>
+</div>
+
+<div id="adminPanel" style="display:none;">
+
+  <div class="section">
+    <h2>Update Slot Data</h2>
+    <input id="matchPath" placeholder="Match path (e.g. TestMatch1/Teams/01/MyTeam)">
+    <input id="fieldName" placeholder="Field (e.g. Player 1 UID)">
+    <input id="fieldValue" placeholder="New Value">
+    <button onclick="updateSlotField()">Update Field</button>
+    <p id="slotUpdateStatus"></p>
+  </div>
+
+  <div class="section">
+    <h2>Post/Update Match Info</h2>
+    <input id="matchInfoPath" placeholder="Match Info Path (e.g. TestMatch1/Info/Date)">
+    <input id="matchInfoValue" placeholder="Value">
+    <button onclick="updateMatchInfo()">Update Match Info</button>
+    <p id="matchInfoStatus"></p>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyA-LkMwxEsKcz30XFiZNNp52kfOb8rJtkY",
+  authDomain: "idea-hatch-f30a2.firebaseapp.com",
+  databaseURL: "https://idea-hatch-f30a2-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "idea-hatch-f30a2",
+  storageBucket: "idea-hatch-f30a2.appspot.com",
+  messagingSenderId: "772329230400",
+  appId: "1:772329230400:web:1e633f72154d0c318b0fa5"
+};
+
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  window.checkLogin = async () => {
+  const enteredId = document.getElementById("adminId").value.trim();
+  const enteredPass = document.getElementById("adminPass").value.trim();
+
+  try {
+    const snap = await get(ref(db, `ELITE ESPORTS/Admins/${enteredId}/password`));
+    if (snap.exists() && snap.val() === enteredPass) {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("adminPanel").style.display = "block";
+      window.currentAdmin = enteredId;
+      loadTeams(); // Load team data now that login is successful
+    } else {
+      document.getElementById("loginStatus").textContent = "❌ Invalid credentials";
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById("loginStatus").textContent = "⚠️ Error connecting to database.";
+  }
+};
+
+
+  window.updateSlotField = async () => {
+    const path = document.getElementById("matchPath").value.trim();
+    const field = document.getElementById("fieldName").value.trim();
+    const value = document.getElementById("fieldValue").value.trim();
+    if (!path || !field || !value) return;
+    try {
+      await set(ref(db, `ELITE ESPORTS/Database/Match Registration/${path}/${field}`), value);
+      document.getElementById("slotUpdateStatus").textContent = `✅ Updated ${field}`;
+    } catch {
+      document.getElementById("slotUpdateStatus").textContent = `❌ Failed`;
+    }
+  };
+
+  window.updateMatchInfo = async () => {
+    const path = document.getElementById("matchInfoPath").value.trim();
+    const value = document.getElementById("matchInfoValue").value.trim();
+    if (!path || !value) return;
+    try {
+      await set(ref(db, `ELITE ESPORTS/Matches/${path}`), value);
+      document.getElementById("matchInfoStatus").textContent = `✅ Match info updated.`;
+    } catch {
+      document.getElementById("matchInfoStatus").textContent = `❌ Failed to update`;
+    }
+  }
+</script>
+
+</body>
+</html>

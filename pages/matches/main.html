@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Matches & Events | ELITE Esports</title>
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+
+  <header class="matches-header">
+    <h1>BGMI Scrims & Tournaments</h1>
+    <nav class="matches-tabs">
+      <button class="tab-btn active" data-tab="scrims">Scrims</button>
+      <button class="tab-btn" data-tab="tournaments">Tournaments</button>
+    </nav>
+  </header>
+
+  <!-- Filter Bar -->
+  <section class="matches-filters">
+    <label>
+      Date:
+      <input type="date" id="filter-date" />
+    </label>
+    <label>
+      Tier:
+      <select id="filter-tier">
+        <option value="">All</option>
+        <option value="t1">Tier 1</option>
+        <option value="t2">Tier 2</option>
+        <option value="t3">Tier 3</option>
+      </select>
+    </label>
+    <label>
+      Entry Fee:
+      <select id="filter-fee">
+        <option value="">All</option>
+        <option value="free">Free</option>
+        <option value="paid">Paid</option>
+      </select>
+    </label>
+    <button id="apply-filters">Apply</button>
+  </section>
+
+  <!-- Scrims List -->
+  <section id="scrims" class="matches-list">
+
+    <!-- Test Match 1 Card -->
+    <article class="match-card">
+      <img src="../assets/matches/testmatch1.jpg" alt="Test Match 1" class="card-image"/>
+      <div class="card-content">
+        <h2 class="card-title">Test Match 1 (Tier 3 Scrim)</h2>
+        <p class="card-meta">
+          📅 Jul 7, 2025 &nbsp;|&nbsp; 🕒 7:30 PM IST &nbsp;|&nbsp; Slots: 20/24
+        </p>
+        <p class="card-meta">
+          Entry: <strong>Free</strong> &nbsp;|&nbsp; Prize Pool: <strong>None</strong>
+        </p>
+        <div class="card-buttons">
+          <a href="matches/TestMatch1Registration.html" class="card-btn">Register</a>
+          <a href="slotlist.html" class="card-btn secondary">View Slotlist</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Test Match 2 Card -->
+    <article class="match-card">
+      <img src="../assets/matches/testmatch2.jpg" alt="Test Match 2" class="card-image"/>
+      <div class="card-content">
+        <h2 class="card-title">Test Match 2 (Tier 2 Scrim)</h2>
+        <p class="card-meta">
+          📅 Jul 8, 2025 &nbsp;|&nbsp; 🕒 8:00 PM IST &nbsp;|&nbsp; Slots: 18/24
+        </p>
+        <p class="card-meta">
+          Entry: <strong>Free</strong> &nbsp;|&nbsp; Prize Pool: <strong>None</strong>
+        </p>
+        <div class="card-buttons">
+          <a href="TestMatch2Registration.html" class="card-btn">Register</a>
+          <a href="slotlist.html" class="card-btn secondary">View Slotlist</a>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- Tournaments List -->
+  <section id="tournaments" class="matches-list hidden">
+    <article class="match-card">
+      <img src="../assets/matches/tournament-placeholder.jpg" alt="Tournament" class="card-image"/>
+      <div class="card-content">
+        <h2 class="card-title">Weekly ₹5,000 Clash</h2>
+        <p class="card-meta">
+          📅 Jul 12, 2025 &nbsp;|&nbsp; 🕒 8:00 PM IST
+        </p>
+        <p class="card-meta">
+          Entry: <strong>₹50/team</strong> &nbsp;|&nbsp; Prize Pool: <strong>₹5,000</strong>
+        </p>
+        <a href="#" class="card-btn">Register</a>
+      </div>
+    </article>
+  </section>
+
+  <script>
+    // Tab switching logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.matches-list').forEach(sec => sec.classList.add('hidden'));
+        document.getElementById(btn.dataset.tab).classList.remove('hidden');
+      });
+    });
+  </script>
+
+</body>
+</html>

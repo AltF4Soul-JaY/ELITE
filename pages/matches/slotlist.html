@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Slotlist | ELITE ESPORTS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    body { background: #0a0a0a; color: #f0f0f0; font-family: 'Orbitron', sans-serif; padding: 30px; }
+    h1 { color: #00fff7; text-align: center; margin-bottom: 30px; text-shadow: 0 0 8px #00fff7; }
+    .match-card { background: #1a1a1a; padding: 20px; margin-bottom: 20px;
+      border-left: 4px solid #00fff7; border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,255,247,0.2); }
+    .match-card h2 { margin: 0; color: #00fff7; }
+    .view-btn { margin-top: 12px; padding: 8px 16px; background: #00fff7; color: #000;
+      border: none; border-radius: 5px; cursor: pointer;
+      box-shadow: 0 0 8px #00fff7; transition: all 0.3s; }
+    .view-btn:hover { background: #ff0055; color: #fff; box-shadow: 0 0 12px #ff0055; }
+    .slotlist-panel { display: none; margin-top: 15px; background: #111;
+      border-radius: 6px; padding: 12px; max-height: 300px;
+      overflow-y: auto; box-shadow: inset 0 0 10px #00fff7; }
+    .slot { background: #1a1a1a; margin: 8px 0; padding: 10px; border-radius: 4px;
+      border-left: 3px solid #00fff7; }
+    .team-name { font-weight: bold; color: #00fff7; }
+    .player { margin-left: 16px; color: #ccc; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Slotlists Overview</h1>
+
+  <!-- Cards will be rendered here -->
+  <div id="matchesContainer"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+    // 🔧 Firebase config
+    const app = initializeApp({
+      apiKey: "AIzaSyA-LkMwxEsKcz30XFiZNNp52kfOb8rJtkY",
+      authDomain: "idea-hatch-f30a2.firebaseapp.com",
+      databaseURL: "https://idea-hatch-f30a2-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "idea-hatch-f30a2"
+    });
+    const db = getDatabase(app);
+
+    // List of matches to load
+    const matches = ["TestMatch1", "TestMatch2"];
+
+    const container = document.getElementById("matchesContainer");
+
+    // Helper to create a card for each match
+    async function loadMatch(matchId) {
+      const card = document.createElement("div");
+      card.className = "match-card";
+      card.innerHTML = `
+        <h2>${matchId}</h2>
+        <button class="view-btn">View Slotlist</button>
+        <div class="slotlist-panel"></div>
+      `;
+      const slotPanel = card.querySelector(".slotlist-panel");
+      const btn = card.querySelector(".view-btn");
+
+      btn.addEventListener("click", async () => {
+        if (slotPanel.style.display === "block") {
+          slotPanel.style.display = "none";
+        } else {
+          slotPanel.innerHTML = "<p>Loading...</p>";
+          slotPanel.style.display = "block";
+
+          const snapshot = await get(ref(db, `ELITE ESPORTS/Matches/${matchId}/Teams`));
+          if (!snapshot.exists()) {
+            slotPanel.innerHTML = "<p>No teams registered yet.</p>";
+          } else {
+            let html = "";
+            snapshot.forEach(slotSnap => {
+              const slot = slotSnap.key;
+              slotSnap.forEach(teamSnap => {
+                const team = teamSnap.key;
+                const data = teamSnap.val();
+                html += `<div class="slot"><div class="team-name">${slot} – ${team}</div>`;
+                Object.entries(data).forEach(([k,v]) => {
+                  if (k.includes("Player")) html += `<div class="player">${k}: ${v}</div>`;
+                });
+                html += `</div>`;
+              });
+            });
+            slotPanel.innerHTML = html;
+          }
+        }
+      });
+
+      container.appendChild(card);
+    }
+
+    // Render all matches
+    matches.forEach(id => loadMatch(id));
+  </script>
+</body>
+</html>

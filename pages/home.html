@@ -29,6 +29,7 @@
     <nav class="navbar">
       <ul class="nav-links">
         <li><a href="home.html" class="active">Home</a></li>
+        <li><a href="matches/main.html">Matches</a></li>
         <li><a href="#" id="aboutTrigger">About Us</a></li>
         <li><a href="#" id="teamsTrigger">Teams</a></li>
         <li><a href="#" id="newsTrigger">News</a></li>
@@ -43,7 +44,7 @@
       <p class="hero-desc">
         We are a professional esports organisation competing in BGMI tournaments.
       </p>
-      <a href="" target="_blank" class="join-btn">
+      <a href="#" target="_blank" class="join-btn">
         Join Our WhatsApp Group
       </a>
     </section>
@@ -96,10 +97,8 @@
     Object.values(modals).forEach(({ btn, modal, content, url }, index, all) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-
-        // Close all modals first
+        // Close all modals
         all.forEach(({ modal }) => modal.classList.add("hidden"));
-
         modal.classList.remove("hidden");
 
         if (!modals[btn.id.replace("Trigger", "")].loaded) {
@@ -117,13 +116,13 @@
       });
     });
 
-    // Close modal when clicking outside any modal content
+    // Close modal when clicking outside content
     document.addEventListener("click", (event) => {
       Object.values(modals).forEach(({ modal, content, btn }) => {
         const isOpen = !modal.classList.contains("hidden");
-        const clickedInside = content.contains(event.target);
+        const insideModal = content.contains(event.target);
         const clickedBtn = btn.contains(event.target);
-        if (isOpen && !clickedInside && !clickedBtn) {
+        if (isOpen && !insideModal && !clickedBtn) {
           modal.classList.add("hidden");
         }
       });
@@ -131,3 +130,4 @@
   </script>
 </body>
 </html>
+

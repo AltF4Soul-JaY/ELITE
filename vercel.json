@@ -4,7 +4,21 @@
     { "source": "/home.html", "destination": "/pages/home.html" },
     { "source": "/about.html", "destination": "/pages/about.html" },
     { "source": "/teams.html", "destination": "/pages/teams.html" },
-    { "source": "/news.html", "destination": "/pages/news.html" }
-  
+    { "source": "/news.html", "destination": "/pages/news.html" },
+
+    { "source": "/matches/main.html", "destination": "/pages/matches/main.html" },
+    { "source": "/matches/slotlist.html", "destination": "/pages/matches/slotlist.html" },
+    { "source": "/matches/TestMatch1Registration.html", "destination": "/pages/matches/TestMatch1Registration.html" },
+    { "source": "/matches/TestMatch2Registration.html", "destination": "/pages/matches/TestMatch2Registration.html" },
+    { "source": "/matches/TestMatch1.html", "destination": "/pages/matches/TestMatch1.html" },
+    { "source": "/matches/TestMatch2.html", "destination": "/pages/matches/TestMatch2.html" },
+    { "source": "main.html", "destination": "/pages/matches/main.html" },
+    { "source": "slotlist.html", "destination": "/pages/matches/slotlist.html" },
+    { "source": "TestMatch1Registration.html", "destination": "/pages/matches/TestMatch1Registration.html" },
+    { "source": "TestMatch2Registration.html", "destination": "/pages/matches/TestMatch2Registration.html" },
+    { "source": "TestMatch1.html", "destination": "/pages/matches/TestMatch1.html" },
+    { "source": "TestMatch2.html", "destination": "/pages/matches/TestMatch2.html" },
+
+    { "source": "/admin", "destination": "/pages/admin.html" }
   ]
 }
